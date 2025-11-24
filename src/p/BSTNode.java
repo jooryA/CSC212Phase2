@@ -76,9 +76,60 @@ class BST<T> {
             current = tmp;
             return true;
         }
+        
+        public boolean removeKey(int k) {
+        	int k1=k;
+        	
+        	BSTNode<T> p=root;
+        	BSTNode<T> q=null;
+        	
+        	while(p!=null) {
+        		if(k1<p.key) {
+        			q=p;
+        			p=p.left;
+        		}else if(k1>p.key){
+        			q=p;
+        			p=p.right;
+        		}else {
+        			 if((p.left !=null) && (p.right != null)) {
+        				 BSTNode<T> min = p.right;
+        				 q=p;
+        				 while(min.left != null) {
+        					 q=min;
+        					 min=min.left;
+        				 }
+        				 p.key=min.key;
+        				 p.data=min.data;
+        				 k1=min.key;
+        				 p=min;
+        			 }
+        		}
+        		if(p.left != null) {
+        			p=p.left;
+        		}else {
+        			p=p.right;
+        		}
+        		
+        		if(p==q) {
+        			root=p;
+        		}else {
+        			if(k1<q.key) {
+        				q.left=p;
+        			}else {
+        				q.right=p;
+        			}
+        		}
+        		current = root;
+        		return true;
+        	}
+        	return false;
+
+        }
        
 
-        
+        public BSTNode<T> getRoot(){
+        	return root;
+        }
         
         
         
