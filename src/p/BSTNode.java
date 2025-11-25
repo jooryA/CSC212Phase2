@@ -125,6 +125,21 @@ class BST<T> {
         	return false;
 
         }
+        public void inOrder()
+    	{
+    		if(root==null)
+    			System.out.println("empty tree");
+    		else
+    		inOrder(root);
+    	}
+    	private void inOrder(BSTNode<T>p)
+    	{
+    	if(p==null) return;
+    	inOrder(p.left);	
+    	System.out.print("key= "+ p.key);
+    	System.out.println(" , data="+p.data);
+    	inOrder(p.right);
+    	}
        
 
         public BSTNode<T> getRoot(){
