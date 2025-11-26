@@ -44,19 +44,19 @@ public class Customers {
 	            return;
 	        }
 	        System.out.println("=== All customers ===");
-	        inOrderAll(Customers.getRoot());
+	        inOrderAllCus(Customers.getRoot());
 	       
 	    }
 		
-		private void inOrderAll(BSTNode<Customer> node) {
+		private void inOrderAllCus(BSTNode<Customer> node) {
 		    if (node == null) {
 		        return;
 		    }
 
-		    inOrderAll(node.left);             
+		    inOrderAllCus(node.left);             
 		    System.out.println("---------------------------------------------");
 		    node.data.display();              
-		    inOrderAll(node.right);           
+		    inOrderAllCus(node.right);           
 		}
 		
 		

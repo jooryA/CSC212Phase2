@@ -8,24 +8,24 @@ package p;
 
 	
 
-		private LinkedList<Review> reviews;
+		private BST<Review> reviews;
 		private Products products;
 		private Customers Customers;
 		
 		
 		public Reviews() {
-			reviews = new LinkedList<>();
+			reviews = new BST<>();
 			products = new Products();
 			Customers = new Customers();
 
 		}
-		public Reviews(LinkedList<Review> reviews, Products products, Customers customers) {
+		public Reviews(BST<Review> reviews, Products products, Customers customers) {
 	        this.reviews = reviews;
 	        this.products = products;
 	        this.Customers = customers;
 	    }
 		
-		public Reviews(LinkedList<Review> reviews, LinkedList<Product> Tproducts, LinkedList<Customer> Tcustomers) {
+		public Reviews(BST<Review> reviews, BST<Product> Tproducts, BST<Customer> Tcustomers) {
 
 			this.reviews = reviews;
 			products = new Products(Tproducts);
@@ -35,21 +35,13 @@ package p;
 		
 
 		public Review searchReviewtById(int id) {
-			if (reviews.empty())
-				return null; // No Reviews in the list
+			if(reviews.empty())
+				return null;    
 			else {
-				reviews.findfirst();
-				while (!reviews.last()) { // Looping from the first Review till the one before the last
-					if (reviews.retrieve().getReviewID() == id)
-						return reviews.retrieve();
-					reviews.findnext();
-				}
-
-				if (reviews.retrieve().getReviewID() == id) // For the last Review in the list
+				if(reviews.findkey(id))     
 					return reviews.retrieve();
-
-				return null; // If there's no Review in the list matches the id
-			}
+				return null;
+			}	
 		}
 
 		public void AttachReviewToproduct(Review r) {
@@ -94,7 +86,7 @@ package p;
 		    }
 
 		    // Add new review and link it to the customer and product
-		    reviews.insert(R);
+		    reviews.insert(R.getReviewID() , R);
 		    p.insertReview(R);
 		    c.addReview(R);
 		    System.out.println("Added Successfully, Review ID: " + R.getReviewID());
@@ -111,56 +103,83 @@ package p;
 		}
 
 		public void displayReview() {
-			if (reviews.empty()) {
-				System.out.println("No Reviews found ");
-				return;
-			}
+			 if (reviews.empty()) {
+			        System.out.println("No Reviews found ");
+			        return;
+			    }
 
-			reviews.findfirst();
-			while (!reviews.last()) { // display all Reviews until the last Review ( last one not included)
-				Review d = reviews.retrieve();
-				System.out.println("---------------------------------------------");
-				d.display();
-				reviews.findnext();
-			}
-			System.out.println("---------------------------------------------");
-			Review d = reviews.retrieve();// displays the last Review
-			d.display();
+			    System.out.println("=== All Reviews ===");
+			    inOrderAllReviews(reviews.getRoot());
 		}
-		//display reviews for all products for a specific customer
-		public void displayCustomerReviews(int customerId, Products productList) {
-		    if (reviews.empty()) {
-		        System.out.println("No reviews in the system yet.");
+		private void inOrderAllReviews(BSTNode<Review> node) {
+		    if (node == null) {
 		        return;
 		    }
 
-		    int count = 0;
-		    reviews.findfirst();
-		    while (true) {
-		        Review r = reviews.retrieve();
-		        if (r != null && r.getCustomerID() == customerId) {//check if this review actually belong to this specific customer
-		            count++;
-		            int pid = r.getProductID();// Get product information
-		            Product p = (productList != null) ? productList.searchProductById(pid) : null;
+		  
+		    inOrderAllReviews(node.left);
 
-		            System.out.println( "Product: " + pid +(p != null ? " - " + p.getName() : "") +" ,Rating: " + r.getRating() +" ,Comment: " + r.getComment());
+		    System.out.println("---------------------------------------------");
+		    node.data.display();
+
+		    inOrderAllReviews(node.right);
+		}
+		
+		
+		//display reviews for all products for a specific customer
+		public void displayCustomerReviews(int customerId, Products productList) {
+			 if (reviews.empty()) {
+			        System.out.println("No reviews in the system yet.");
+			        return;
+			    }
+
+			    System.out.println("=== Reviews for Customer ID: " + customerId + " ===");
+			    inOrderReviews(reviews.getRoot(), customerId, productList);
+		}
+		private void inOrderReviews(BSTNode<Review> node, int customerId, Products productList) {
+		    if (node == null) {
+		        return;
+		    }
+
+		    // left
+		    inOrderReviews(node.left, customerId, productList);
+
+		    // node (current)
+		    Review r = node.data;
+
+		    if (r.getCustomerID() == customerId) {
+
+		        int pid = r.getProductID();
+		        Product p = null;
+
+		        if (productList != null) {
+		            p = productList.searchProductById(pid);
 		        }
 
-		        if (reviews.last()) break;
-		        reviews.findnext();
+		        System.out.println("---------------------------------------------");
+
+		        if (p != null) {
+		            System.out.println("Product: " + pid + " - " + p.getName() +
+		                    " ,Rating: " + r.getRating() +
+		                    " ,Comment: " + r.getComment());
+		        } else {
+		            System.out.println("Product: " + pid +
+		                    " ,Rating: " + r.getRating() +
+		                    " ,Comment: " + r.getComment());
+		        }
 		    }
 
-		    if (count == 0) {
-		        System.out.println("No reviews found for customer ID: " + customerId);
-		    }
+		    // right
+		    inOrderReviews(node.right, customerId, productList);
 		}
 
 
-		public LinkedList<Review> getReviews() {
+
+		public BST<Review> getReviews() {
 			return reviews;
 		}
 
-		public void setReviews(LinkedList<Review> reviews) {
+		public void setReviews(BST<Review> reviews) {
 			this.reviews = reviews;
 		}
 
@@ -181,18 +200,24 @@ package p;
 		}
 		// Remove all reviews that belong to a given product
 		public void removeReviewsByProduct(int productId) {
-		    if (reviews == null || reviews.empty()) return;
-		    reviews.findfirst();
-		    while (true) {
-		        Review r = reviews.retrieve();
-		        if (r != null && r.getProductID() == productId) {
-		            reviews.remove();                 // delete current review
-		            if (reviews.empty()) break;       // list became empty
-		        } else {
-		            if (reviews.last()) break;
-		            reviews.findnext();
-		        }
+			if (reviews.empty()) {
+		        System.out.println("No reviews found.");
+		        return;
 		    }
+			inOrderRemove(reviews.getRoot(), productId);
+		}
+		private void inOrderRemove(BSTNode<Review> node, int productId) {
+		    if (node == null) return;
+
+		    inOrderRemove(node.left, productId);
+
+		    Review r = node.data;
+
+		    if (r.getProductID() == productId) {
+		        reviews.removeKey(r.getReviewID());
+		    }
+
+		    inOrderRemove(node.right, productId);
 		}
 
 		
@@ -220,7 +245,7 @@ package p;
 
 
 		        	Review r= new Review( reviewID,  customerID,  productID,  rating, comment);
-		            reviews.insert(r);
+		            reviews.insert(r.getReviewID() , r);
 		            
 		            Product p = productList.searchProductById(productID);
 	                if (p != null) {
