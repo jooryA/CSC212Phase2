@@ -23,13 +23,11 @@ public  BST<Product> products;
 	}
 	
 	public void removeProduct(int id) {
-		if(searchProductById(id)!=null) {
-			String name =products.retrieve().getName();
-			products.remove();       //the search method would move the current to the intended product so it'll get removed
-			System.out.println(("Product ID: "+id+" is removed successfully."));}
-		else {
-			System.out.println("Product with this Id does not exist.");
-		}
+	    if (products.removeKey(id)) {
+	        System.out.println("Product ID: " + id + " is removed successfully.");
+	    } else {
+	        System.out.println("Product with this Id does not exist.");
+	    }
 	}
 	
 	public void updateProduct(int id , Product p) {
@@ -93,6 +91,28 @@ public  BST<Product> products;
 
 	}
 	
+	
+    public void printProductsByPriceRange(double min, double max) {
+        if (products.empty()) {
+            System.out.println("No products found.");
+            return;
+        }
+        System.out.println("Products with price between " + min + " and " + max + ":");
+        productsByPriceRange(products.getRoot(), min, max);
+    }
+
+    private void productsByPriceRange(BSTNode<Product> p, double min, double max) {
+        if (p == null) return;
+        
+        productsByPriceRange(p.left, min, max);
+        
+        if (p.data.getPrice() >= min && p.data.getPrice() <= max) {
+            System.out.println(p.data.toString());
+        }
+        
+        productsByPriceRange(p.right, min, max);
+    }
+	
 	public void loadProducts(String fileName) {
 		try {
 			File file = new File(fileName);
@@ -106,7 +126,14 @@ public  BST<Product> products;
 				String line = read.nextLine().trim();
 				if(!line.isEmpty()) {
 					String productInfo[]=line.split(",");
-					products.insert(new Product(Integer.parseInt(productInfo[0]), productInfo[1] ,Double.parseDouble(productInfo[2]) ,Integer.parseInt(productInfo[3])));
+					
+					// 1. Get the ID (Key)
+					int id = Integer.parseInt(productInfo[0]);
+					
+					// 2. Create the Product (Value)
+					Product p = new Product(id, productInfo[1] ,Double.parseDouble(productInfo[2]) ,Integer.parseInt(productInfo[3]));
+					
+					products.insert(id, p);
 				}
 			}
 			read.close();

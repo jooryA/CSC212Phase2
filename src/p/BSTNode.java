@@ -78,53 +78,60 @@ class BST<T> {
         }
         
         public boolean removeKey(int k) {
-        	int k1=k;
-        	
-        	BSTNode<T> p=root;
-        	BSTNode<T> q=null;
-        	
-        	while(p!=null) {
-        		if(k1<p.key) {
-        			q=p;
-        			p=p.left;
-        		}else if(k1>p.key){
-        			q=p;
-        			p=p.right;
-        		}else {
-        			 if((p.left !=null) && (p.right != null)) {
-        				 BSTNode<T> min = p.right;
-        				 q=p;
-        				 while(min.left != null) {
-        					 q=min;
-        					 min=min.left;
-        				 }
-        				 p.key=min.key;
-        				 p.data=min.data;
-        				 k1=min.key;
-        				 p=min;
-        			 }
-        		}
-        		if(p.left != null) {
-        			p=p.left;
-        		}else {
-        			p=p.right;
-        		}
-        		
-        		if(p==q) {
-        			root=p;
-        		}else {
-        			if(k1<q.key) {
-        				q.left=p;
-        			}else {
-        				q.right=p;
-        			}
-        		}
-        		current = root;
-        		return true;
-        	}
-        	return false;
+            BSTNode<T> p = root;
+            BSTNode<T> q = null; 
+            
+            while (p != null && p.key != k) {
+                q = p;
+                if (k < p.key) {
+                    p = p.left;
+                } else {
+                    p = p.right;
+                }
+            }
 
+            if (p == null) {
+                return false;
+            }
+
+            if (p.left != null && p.right != null) {
+
+            	BSTNode<T> min = p.right;
+                BSTNode<T> qMin = p;
+                
+                while (min.left != null) {
+                    qMin = min;
+                    min = min.left;
+                }
+
+                p.key = min.key;
+                p.data = min.data;
+
+                p = min;
+                q = qMin;
+            }
+
+            BSTNode<T> child;
+            if (p.left != null) {
+                child = p.left;
+            } else {
+                child = p.right;
+            }
+
+            if (q == null) {
+                root = child; 
+            } else {
+                if (q.left == p) {
+                    q.left = child;
+                } else {
+                    q.right = child;
+                }
+            }
+            
+            current = root; 
+            return true;
         }
+        
         public void inOrder()
     	{
     		if(root==null)
