@@ -8,10 +8,10 @@ import java.util.Scanner;
 public class ECommerceSystem {
 	static Scanner input = new Scanner(System.in);
 
-	static BST<Review> ReviewsList;
-	static BST<Product> ProductsList;
-	static BST<Customer> CustomersList;
-	static BST<Order> OrdersList;
+	static BST<Review> ReviewsTree;
+	static BST<Product> ProductsTree;
+	static BST<Customer> CustomersTree;
+	static BST<Order> OrdersTree;
 
 	static Reviews AllReviews;
 	static Products AllProducts;
@@ -140,17 +140,17 @@ public class ECommerceSystem {
 		return nextCustomerId; 
 	}
 	public ECommerceSystem() {
-		ReviewsList = new BST<Review>();
-		ProductsList = new BST<Product>();
-		CustomersList = new BST<Customer>();
-		OrdersList = new BST<Order>();
+		ReviewsTree = new BST<Review>();
+		ProductsTree = new BST<Product>();
+		CustomersTree = new BST<Customer>();
+		OrdersTree = new BST<Order>();
 
 		// creates an objects and initializes its LinkedList
 
-		AllProducts = new Products(ProductsList);
-		AllCustomers = new Customers(CustomersList);
-		AllReviews = new Reviews(ReviewsList, ProductsList, CustomersList); 
-		AllOrders = new Orders(CustomersList, OrdersList);	}
+		AllProducts = new Products(ProductsTree);
+		AllCustomers = new Customers(CustomersTree);
+		AllReviews = new Reviews(ReviewsTree, ProductsTree, CustomersTree); 
+		AllOrders = new Orders(CustomersTree, OrdersTree);	}
 
 
 
@@ -191,7 +191,8 @@ public class ECommerceSystem {
 					System.out.println("13- Get average product rating");
 					System.out.println("14- Search for a product by its name");
 					System.out.println("15- track out of stock products");
-					System.out.println("16- Return to main menu.");
+					System.out.println("16- Display Customers Who Reviewed a Product( Sorted by Customer ID )");
+					System.out.println("17- Return to main menu.");
 					System.out.print("Enter your choice: ");
 					choice=input.nextInt();
 					System.out.println("===============================================");
@@ -283,18 +284,15 @@ public class ECommerceSystem {
 					case 6:// Show Top 3 Products (Based on Rating)
 						ES.displayTop3Products();
 						break;
-					case 7:// Show Orders Between Two Dates
-						System.out.print("Enter Start Date (yyyy-M-d): ");
-						String start = input.next();
-						System.out.print("Enter End Date (yyyy-M-d): ");
-						String end = input.next();
+					case 7:  //Show orders between two dates
+					    System.out.print("Enter start date (yyyy-MM-dd): ");
+					    LocalDate d1 = LocalDate.parse(input.next());
 
-						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-M-d");
-						LocalDate d1 = LocalDate.parse(start, dtf);
-						LocalDate d2 = LocalDate.parse(end, dtf);
+					    System.out.print("Enter end date (yyyy-MM-dd): ");
+					    LocalDate d2 = LocalDate.parse(input.next());
 
-						ES.displayOrdersBetween2Dates(d1,d2);
-						break;
+					    displayOrdersBetween2Dates(d1, d2);
+					    break;
 
 					case 8:// Show Common Products Reviewed by Two Customers(Rated above 4)
 
@@ -303,7 +301,7 @@ public class ECommerceSystem {
 						System.out.print("Enter second customer ID: ");
 						int c2 = input.nextInt();
 
-						ES.showCommonProductsAbove4(c1, c2);
+						//ES.showCommonProductsAbove4(c1, c2);
 						break;
 
 
@@ -345,12 +343,17 @@ public class ECommerceSystem {
 					case 15:// show is there out of stock products
 						AllProducts.getOutOfStockProducts();
 						break;
-					case 16:// exit
+					case 16://Display Customers Who Reviewed a Product
+						System.out.print("Enter product ID: ");
+					    int pid = input.nextInt();
+					    displayCustomersWhoReviewedProduct(pid);
+						break;
+					case 17:// exit
 						System.out.println("Thank you! ");
 						System.out.println("===============================================");
 						break;
 					}// end of manager switch
-				}while(choice!=16);
+				}while(choice!=17);
 
 
 				break; //end of case manager switch1 
@@ -510,13 +513,13 @@ public class ECommerceSystem {
 	public void WriteData() {
 		System.out.println("\n--- Saving all data to files before exit ---");
 		FileManager fm = new FileManager();
-		fm.saveAllData(ProductsList, CustomersList, OrdersList, ReviewsList);
+		fm.saveAllData(ProductsTree, CustomersTree, OrdersTree, ReviewsTree);
 		System.out.println("--- Data saving complete ---");
 	}
 	
 
 	public void displayTop3Products() {
-        if (ProductsList.empty()) {
+        if (ProductsTree.empty()) {
             System.out.println("No products in the list.");
             return;
         }
@@ -527,7 +530,7 @@ public class ECommerceSystem {
         top3[1] = new Product(-1, "-", -1, -1);
         top3[2] = new Product(-1, "-", -1, -1);
 
-        Top3Products(ProductsList.getRoot(), top3);
+        Top3Products(ProductsTree.getRoot(), top3);
 
         System.out.println("Top Products (Based on Rating and Review Count)");
 
@@ -582,41 +585,93 @@ public class ECommerceSystem {
     }
 
 
-	public void displayOrdersBetween2Dates(LocalDate d1, LocalDate d2) {
-		// Check if the orders list is empty
-		if (OrdersList.empty()) {
-			System.out.println("No Orders Found");
-			return;
-		}
-		// If the user entered the dates in the wrong order, swap them
-		if (d1.isAfter(d2)) {
-			LocalDate temp = d1;
-			d1 = d2;
-			d2 = temp;
-		}
-		int count = 0; // Counter to check how many orders are printed
-		// Go through all orders in the list
-		OrdersList.findfirst();
-		while (true) {
-			Order ord = OrdersList.retrieve();
-			// Print the order if its date is between d1 and d2
-			if (ord.getOrderDate().compareTo(d1) >= 0 && ord.getOrderDate().compareTo(d2) <= 0) {
-				System.out.println(ord);
-				System.out.println("---------------------------------------------");
-				count++;
-			}
-			// Stop when reaching the last order
-			if (OrdersList.last()) break;
-			OrdersList.findnext();
-		}
-		// If no orders were found between the two dates show a message
-		if (count == 0) {
-			System.out.println("No orders found between these two dates.");
-		}
+	// to check if any order was found in the range
+	private static boolean foundInRange;
+
+	// Display all orders between two dates 
+	public static void displayOrdersBetween2Dates(LocalDate d1, LocalDate d2) {
+	    if (OrdersTree.empty()) {
+	        System.out.println("No orders found.");
+	        return;
+	    }
+
+	    foundInRange = false; 
+
+	    // start from the root of the Orders BST
+	    OrdersBetween2Dates(OrdersTree.getRoot(), d1, d2);
+
+	    if (!foundInRange) {
+	        System.out.println("No orders found in this date range.");
+	    }
+	}
+	private static void OrdersBetween2Dates(BSTNode<Order> node, LocalDate d1, LocalDate d2) {
+	    if (node == null) return;
+
+	    // left subtree
+	    OrdersBetween2Dates(node.left, d1, d2);
+
+	    // check current node
+	    LocalDate date = node.data.getOrderDate();
+	    if (date.compareTo(d1) >= 0 && date.compareTo(d2) <= 0) {
+	        System.out.println("---------------------------------------------");
+	        System.out.println(node.data.toString());
+	        foundInRange = true;
+	    }
+
+	    // right subtree
+	    OrdersBetween2Dates(node.right, d1, d2);
+	}
+	public static void displayCustomersWhoReviewedProduct(int productId) {
+
+	    if (ReviewsTree.empty()) {
+	        System.out.println("No reviews found.");
+	        return;
+	    }
+
+	 // Temporary BST to sort matching reviews by customer ID
+	    BST<Review> temp = new BST<>();
+
+	    // Collect all reviews for this product into the temporary tree
+	    collectReviewsForProduct(ReviewsTree.getRoot(), productId, temp);
+
+	    if (temp.empty()) {
+	        System.out.println("No reviews found for product ID: " + productId);
+	        return;
+	    }
+
+	    System.out.println("--- Customers who reviewed product " + productId + " (sorted by customer ID) ---");
+
+	 // Print the sorted reviews using in-order traversal
+	    printSorted(temp.getRoot());
 	}
 
+	private static void collectReviewsForProduct(BSTNode<Review> node, int productId, BST<Review> temp) {
+	    if (node == null) return;
+
+	    // Left
+	    collectReviewsForProduct(node.left, productId, temp);
+
+	    Review r = node.data;
+
+	    if (r.getProductID() == productId) {
+	        
+	        temp.insert(r.getCustomerID(), r);
+	    }
+
+	    // Right
+	    collectReviewsForProduct(node.right, productId, temp);
+	}
+	private static void printSorted(BSTNode<Review> node) {
+	    if (node == null) return;
+
+	    printSorted(node.left);
+	    node.data.display();  
+	    printSorted(node.right);
+	}
+
+
 	// Show common products reviewed by two customers with Avg > 4
-	private static void showCommonProductsAbove4(int c1, int c2) {
+	/*private static void showCommonProductsAbove4(int c1, int c2) {
 
 		if (AllReviews == null || AllProducts == null) {
 			System.out.println("Data not loaded!");
@@ -686,7 +741,7 @@ public class ECommerceSystem {
 			System.out.println("No common products reviewed by both customers with Avg > 4.");
 		}
 	}
-
+*/
 
 
 
