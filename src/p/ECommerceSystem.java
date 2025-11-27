@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class ECommerceSystem {
 	static Scanner input = new Scanner(System.in);
 
-	static LinkedList<Review> ReviewsList;
+	static BST<Review> ReviewsList;
 	static BST<Product> ProductsList;
 	static BST<Customer> CustomersList;
 	static BST<Order> OrdersList;
@@ -140,7 +140,7 @@ public class ECommerceSystem {
 		return nextCustomerId; 
 	}
 	public ECommerceSystem() {
-		ReviewsList = new LinkedList<Review>();
+		ReviewsList = new BST<Review>();
 		ProductsList = new BST<Product>();
 		CustomersList = new BST<Customer>();
 		OrdersList = new BST<Order>();
@@ -308,7 +308,7 @@ public class ECommerceSystem {
 
 
 					case 9 : //Display all Products
-						AllProducts.displayProducts();
+						AllProducts.displayAllProducts();
 						break;
 
 					case 10 : //Display all customers
@@ -316,7 +316,7 @@ public class ECommerceSystem {
 						break;
 
 					case 11 : //Display all orders
-						AllOrders.displayOrders();
+						AllOrders.displayAllOrders();
 						break;
 
 					case 12 : //Display all reviews
@@ -336,14 +336,14 @@ public class ECommerceSystem {
 						System.out.println("Enter The name of product you want to Search for: ");
 						input.nextLine();
 						String proName=input.nextLine();
-						Product n=AllProducts.searchProductByName(proName);
+						Product n=AllProducts.getSearchProductByName(proName);
 						if(n!= null)
 							System.out.println(n);
 						else
 							System.out.println("No product with this name found");
 						break;
 					case 15:// show is there out of stock products
-						AllProducts.outOfStockProducts();
+						AllProducts.getOutOfStockProducts();
 						break;
 					case 16:// exit
 						System.out.println("Thank you! ");
@@ -365,7 +365,7 @@ public class ECommerceSystem {
 				System.out.println("4- Cancel order");
 				System.out.println("5- Add new review or update ");
 				System.out.println("6- Get average rating");
-				System.out.println("7- Show Top 3 Products (Based on Rating)");
+				System.out.println("7- Show the Top 3 Most Reviewed or Highest Rated Products");
 				System.out.println("8- Return to main menu");
 				System.out.print("Enter your choice: ");
 				choice=input.nextInt();
@@ -385,9 +385,6 @@ public class ECommerceSystem {
 					AllCustomers.registerNewCustomer(C);
 					break;
 				case 2: // Place an order
-
-
-
 
 					System.out.print("Enter Customer ID: ");
 					int cusID = input.nextInt();
@@ -505,7 +502,7 @@ public class ECommerceSystem {
 		AllOrders.loadOrders(ORDERS_FILE);
 		AllReviews.loadReviews(REVIEWS_FILE, AllProducts); 
 
-		AllOrders.productList = AllProducts; 
+		AllOrders.setProducts(AllProducts);
 		AllReviews.setProducts(AllProducts); 
 		AllReviews.setCustomers(AllCustomers); 
 	}
@@ -628,7 +625,7 @@ public class ECommerceSystem {
 
 		LinkedList<Integer> customer1Products = new LinkedList<>();
 		LinkedList<Integer> customer2Products = new LinkedList<>();
-		LinkedList<Review> reviewsList = AllReviews.getReviews();
+		BST<Review> reviewsList = AllReviews.getReviews();
 
 		// product lists for both customers
 		if (!reviewsList.empty()) {

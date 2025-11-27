@@ -5,14 +5,14 @@ public class Product {
 	private String name;
 	private double price;
 	private int stock;
-	private LinkedList<Review> reviews;  //each product has its own reviews
+	private BST<Review> reviews;  //each product has its own reviews
 	
 	public Product(int productId, String name, double price, int stock) {   //a constructor
 		this.productId = productId;
 		this.name = name;
 		this.price = price;
 		this.stock = stock;
-		reviews = new LinkedList<>();	   
+		reviews = new BST<>();	   
 	}
 	
 	public void updateProduct(Product p) {       
@@ -21,43 +21,41 @@ public class Product {
 	this.stock = p.stock;
 	}
 	
-	public double getAverageRating() {
+	public int getReviewCount() {
 		if(reviews.empty())
 			return 0;
-		double sum = 0;
-		int count =0;
-		reviews.findfirst();
-		while(!reviews.last()) {
-			sum+=reviews.retrieve().getRating();
-			count++;
-			reviews.findnext();
-		}
-		sum+=reviews.retrieve().getRating();
-		count++;
 		
-		return sum/count;
+		return revCount(reviews.getRoot());
 	}
-	// Returns how many reviews this product has
-	public int getReviewCount() {
-	    if (reviews == null || reviews.empty())
+	private int revCount(BSTNode<Review> p) {
+		if (p == null) 
+	        return 0;
+	    
+	    return 1 + revCount(p.left) + revCount(p.right);
+	}
+	
+	public double getAverageRating() {
+	    if (reviews.empty())
 	        return 0;
 
-	    int count = 0;
-	    reviews.findfirst();
-	    while (true) {
-	        if (reviews.retrieve() != null)
-	            count++;
+	    int count = getReviewCount();
+	    
+	    if (count == 0) 
+	        return 0;
 
-	        if (reviews.last())
-	            break;
-	        reviews.findnext();
-	    }
-
-	    return count;
+	    double totalSum = sumRating(reviews.getRoot());
+	    return totalSum / count;
+	}
+	
+	private double sumRating(BSTNode<Review> p) {
+		if (p == null) 
+	        return 0;
+	    
+	    return p.data.getRating() + sumRating(p.left) + sumRating(p.right);
 	}
 
 	public void insertReview(Review r){
-	    reviews.insert(r);
+	    reviews.insert(r.getReviewID(),r);
 	}
 	
 	public int getProductId() {
