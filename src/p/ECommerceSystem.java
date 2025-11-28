@@ -27,6 +27,8 @@ public class ECommerceSystem {
 	private static final String CUSTOMERS_FILE = "dataset/customers.csv";
 	private static final String ORDERS_FILE = "dataset/orders.csv";
 	private static final String REVIEWS_FILE = "dataset/reviews.csv";
+	
+
 
 
 
@@ -485,6 +487,9 @@ public class ECommerceSystem {
 				}while(choice!=8);
 
 				break; //end of case customer switch1
+			case 9 :
+				AllCustomers.displayAllCustomersAlphabetically();
+
 
 			case 3: //Exit 
 				ES.WriteData();
