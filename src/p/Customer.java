@@ -29,6 +29,7 @@ public class Customer {
 				orders.findfirst();
 				while(!orders.last()) {// display all orders until the last order ( last one not included)
 					System.out.println(orders.retrieve().toString());
+					System.out.println("---------------------------");
 					orders.findnext();
 				}
 				System.out.println(orders.retrieve().toString());// displays the last order
