@@ -43,27 +43,7 @@ public class AVL <T> {
             return false;}
             
             
-        public boolean insert(int k, T val) {
-            if (root == null) {
-                current = root = new BSTNode<T>(k, val);
-                return true;
-            }
-
-            BSTNode<T> p = current;
-            if (findkey(k)) {
-                current = p;
-                return false;
-            }
-
-            BSTNode<T> tmp = new BSTNode<T>(k, val);
-            if (k < current.key) {
-                current.left = tmp;
-            } else {
-                current.right = tmp;
-            }
-            current = tmp;
-            return true;
-        }
+       
         
         public boolean removeKey(int k) {
         	BSTNode<T> p = root;
@@ -186,7 +166,7 @@ public class AVL <T> {
         }
         
         
-        public boolean insertm(int k, T val) {
+        public boolean insert(int k, T val) {
             if (findkey(k)) return false; // key exists
             root = insertAVL(root, k, val);
             return true;

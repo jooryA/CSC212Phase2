@@ -159,6 +159,8 @@ public class ECommerceSystem {
 
 
 	public static void main(String[] args) {
+		
+
 		ECommerceSystem ES = new ECommerceSystem();
 		ES.ReadData();
 		int choice1;
@@ -744,6 +746,7 @@ public class ECommerceSystem {
 
         findAndPrintIntersection(p.right, q);
     }
+    
 
 
 }
