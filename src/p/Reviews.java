@@ -8,24 +8,24 @@ package p;
 
 	
 
-		private BST<Review> reviews;
+		private AVL<Review> reviews;
 		private Products products;
 		private Customers Customers;
 		
 		
 		public Reviews() {
-			reviews = new BST<>();
+			reviews = new AVL<>();
 			products = new Products();
 			Customers = new Customers();
 
 		}
-		public Reviews(BST<Review> reviews, Products products, Customers customers) {
+		public Reviews(AVL<Review> reviews, Products products, Customers customers) {
 	        this.reviews = reviews;
 	        this.products = products;
 	        this.Customers = customers;
 	    }
 		
-		public Reviews(BST<Review> reviews, BST<Product> Tproducts, BST<Customer> Tcustomers) {
+		public Reviews(AVL<Review> reviews, AVL<Product> Tproducts, AVL<Customer> Tcustomers) {
 
 			this.reviews = reviews;
 			products = new Products(Tproducts);
@@ -175,11 +175,12 @@ package p;
 
 
 
-		public BST<Review> getReviews() {
+		public AVL<Review> getReviews() {
 			return reviews;
 		}
 
-		public void setReviews(BST<Review> reviews) {
+		public void setReviews(AVL
+				<Review> reviews) {
 			this.reviews = reviews;
 		}
 

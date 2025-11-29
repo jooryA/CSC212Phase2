@@ -16,21 +16,21 @@ public class FileManager {
     /**
      * Public method to call all save functions, passing the BSTs for all collections.
      */
-    public void saveAllData(BST<Product> products, 
-                            BST<Customer> customers,
-                            BST<Order> orders, 
-                            BST<Review> reviews) { // All four are now BSTs
+    public void saveAllData(AVL<Product> products, 
+                            AVL<Customer> customers,
+                            AVL<Order> orders, 
+                            AVL<Review> reviews) { // All four are now BSTs
         
-        saveBST(PRODUCTS_FILE, "productId,name,price,stock", products);
-        saveBST(CUSTOMERS_FILE, "customerId,name,email", customers);
-        saveBST(ORDERS_FILE, "orderId,customerId,productIds,totalPrice,orderDate,status", orders);
-        saveBST(REVIEWS_FILE, "reviewID,productID,customerID,rating,comment", reviews);
+    	saveAVL(PRODUCTS_FILE, "productId,name,price,stock", products);
+    	saveAVL(CUSTOMERS_FILE, "customerId,name,email", customers);
+    	saveAVL(ORDERS_FILE, "orderId,customerId,productIds,totalPrice,orderDate,status", orders);
+        saveAVL(REVIEWS_FILE, "reviewID,productID,customerID,rating,comment", reviews);
     }
         
     /**
      * [BST METHOD] Generic method to save any BST using recursive In-Order Traversal.
      */
-    private <T> void saveBST(String fileName, String header, BST<T> tree) {
+    private <T> void saveAVL(String fileName, String header, AVL<T> tree) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName, false))) {
             
             pw.println(header); 

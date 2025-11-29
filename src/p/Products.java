@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Products {
-public  BST<Product> products;
+public  AVL<Product> products;
 	
-	public Products(BST<Product> products) {
+	public Products(AVL<Product> products) {
 		this.products=products;
 	}
 
 	public Products() { 
-		products = new BST<Product>();
+		products = new AVL<Product>();
 	   
 	}
 
@@ -164,7 +164,7 @@ public  BST<Product> products;
 		displayProducts(p.right);
 	}
 
-	public BST<Product> getProducts() {
+	public AVL<Product> getProducts() {
 		return products;
 	}
 

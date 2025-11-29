@@ -5,14 +5,14 @@ public class Product {
 	private String name;
 	private double price;
 	private int stock;
-	private BST<Review> reviews;  //each product has its own reviews
+	private AVL<Review> reviews;  //each product has its own reviews
 	
 	public Product(int productId, String name, double price, int stock) {   //a constructor
 		this.productId = productId;
 		this.name = name;
 		this.price = price;
 		this.stock = stock;
-		reviews = new BST<>();	   
+		reviews = new AVL<>();	   
 	}
 	
 	public void updateProduct(Product p) {       

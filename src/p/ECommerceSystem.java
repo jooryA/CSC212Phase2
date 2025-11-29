@@ -8,10 +8,10 @@ import java.util.Scanner;
 public class ECommerceSystem {
 	static Scanner input = new Scanner(System.in);
 
-	static BST<Review> ReviewsTree;
-	static BST<Product> ProductsTree;
-	static BST<Customer> CustomersTree;
-	static BST<Order> OrdersTree;
+	static AVL<Review> ReviewsTree;
+	static AVL<Product> ProductsTree;
+	static AVL<Customer> CustomersTree;
+	static AVL<Order> OrdersTree;
 
 	static Reviews AllReviews;
 	static Products AllProducts;
@@ -142,10 +142,10 @@ public class ECommerceSystem {
 		return nextCustomerId; 
 	}
 	public ECommerceSystem() {
-		ReviewsTree = new BST<Review>();
-		ProductsTree = new BST<Product>();
-		CustomersTree = new BST<Customer>();
-		OrdersTree = new BST<Order>();
+		ReviewsTree = new AVL<Review>();
+		ProductsTree = new AVL<Product>();
+		CustomersTree = new AVL<Customer>();
+		OrdersTree = new AVL<Order>();
 
 		// creates an objects and initializes its LinkedList
 

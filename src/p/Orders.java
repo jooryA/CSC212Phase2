@@ -5,23 +5,23 @@ import java.util.Scanner;
 
 public class Orders {
 
-    private BST<Order> orders;
+    private AVL<Order> orders;
 	private Customers customers; 
 	public Products products;
 	
 	
-	public Orders(BST<Customer> customersTree ,BST<Order> ordersTree) {
+	public Orders(AVL<Customer> customersTree ,AVL<Order> ordersTree) {
 		this.orders = ordersTree;
 	   this.customers=new Customers(customersTree); 
 	}
-	public Orders(BST<Customer> customersTree , BST<Order> ordersTree, BST<Product>productsTree) {
+	public Orders(AVL<Customer> customersTree , AVL<Order> ordersTree, AVL<Product>productsTree) {
 	    this.orders = ordersTree;
 	    this.customers = new Customers(customersTree);
 	    this.products = new Products (productsTree);
 	}
 	
 	public Orders() {
-		this.orders = new BST<>();
+		this.orders = new AVL<>();
 	    this.customers = new Customers();
 	    this.products = new Products();
 	}

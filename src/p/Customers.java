@@ -6,13 +6,13 @@ public class Customers {
 
 
 
-		private  BST<Customer> Customers;
+		private  AVL<Customer> Customers;
 
 		public Customers() {
 		
-			Customers = new BST<>();
+			Customers = new AVL<>();
 		}
-		public Customers(BST<Customer> customerTree) {
+		public Customers(AVL<Customer> customerTree) {
 		Customers=customerTree;	
 		}
 		public Customer SearchCustomerById(int id) {
