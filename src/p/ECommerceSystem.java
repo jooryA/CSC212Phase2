@@ -183,7 +183,7 @@ public class ECommerceSystem {
 					System.out.println("3- Update product");
 					System.out.println("4- Update order status");
 					System.out.println("5- View Customer Reviews");
-					System.out.println("6- Show Top 3 Products (Based on Rating)");
+					System.out.println("6- Show the Top 3 Most Reviewed or Highest Rated Products");
 					System.out.println("7- Show Orders Between Two Dates");
 					System.out.println("8- Show Common Products Reviewed by Two Customers(Rated above 4)");
 					System.out.println("9- Display all Products");
@@ -194,7 +194,8 @@ public class ECommerceSystem {
 					System.out.println("14- Search for a product by its name");
 					System.out.println("15- track out of stock products");
 					System.out.println("16- Display Customers Who Reviewed a Product( Sorted by Customer ID )");
-					System.out.println("17- Return to main menu.");
+					System.out.println("17- List All Products Within a Price Range.");
+					System.out.println("18- Return to main menu.");
 					System.out.print("Enter your choice: ");
 					choice=input.nextInt();
 					System.out.println("===============================================");
@@ -303,7 +304,7 @@ public class ECommerceSystem {
 						System.out.print("Enter second customer ID: ");
 						int c2 = input.nextInt();
 
-						//ES.showCommonProductsAbove4(c1, c2);
+						ES.showCommonProductsAbove4(c1, c2);
 						break;
 
 
@@ -350,12 +351,20 @@ public class ECommerceSystem {
 					    int pid = input.nextInt();
 					    displayCustomersWhoReviewedProduct(pid);
 						break;
-					case 17:// exit
+					case 17: //List All Products Within a Price Range
+					    System.out.print("Enter minimum price: ");
+					    double min = input.nextDouble();
+					    System.out.print("Enter maximum price: ");
+					    double max = input.nextDouble();
+					    
+					    AllProducts.printProductsByPriceRange(min, max);
+					    break;
+					case 18:// exit
 						System.out.println("Thank you! ");
 						System.out.println("===============================================");
 						break;
 					}// end of manager switch
-				}while(choice!=17);
+				}while(choice!=18);
 
 
 				break; //end of case manager switch1 
@@ -676,80 +685,65 @@ public class ECommerceSystem {
 
 
 	// Show common products reviewed by two customers with Avg > 4
-	/*private static void showCommonProductsAbove4(int c1, int c2) {
+    private void showCommonProductsAbove4(int c1, int c2) {
+        if (AllReviews == null || AllProducts == null) {
+            System.out.println("Data not loaded!");
+            return;
+        }
+        
+        BST<Integer> c1Prods = new BST<>();
+        BST<Integer> c2Prods = new BST<>();
 
-		if (AllReviews == null || AllProducts == null) {
-			System.out.println("Data not loaded!");
-			return;
-		}
+        fillCustomerProductLists(ReviewsTree.getRoot(), c1, c2, c1Prods, c2Prods);
 
-		LinkedList<Integer> customer1Products = new LinkedList<>();
-		LinkedList<Integer> customer2Products = new LinkedList<>();
-		BST<Review> reviewsList = AllReviews.getReviews();
+        if (c1Prods.empty() || c2Prods.empty()) {
+            System.out.println("No common products reviewed by both customers with Avg > 4.");
+            return;
+        }
 
-		// product lists for both customers
-		if (!reviewsList.empty()) {
-			reviewsList.findfirst();
-			while (!reviewsList.last()) {
-				Review r = reviewsList.retrieve();
-				Product p = AllProducts.searchProductById(r.getProductID());
+        System.out.println("Common products with Avg Rating > 4:");
+        findAndPrintIntersection(c1Prods.getRoot(), c2Prods);
+    }
 
-				// only consider products whose average rating > 4
-				if (p != null && p.getAverageRating() > 4) {
-					if (r.getCustomerID() == c1) customer1Products.insert(r.getProductID());
-					if (r.getCustomerID() == c2) customer2Products.insert(r.getProductID());
-				}
-				reviewsList.findnext();
-			}
-			// handle the last review
-			Review r = reviewsList.retrieve();
-			Product p = AllProducts.searchProductById(r.getProductID());
-			if (p != null && p.getAverageRating() > 4) {
-				if (r.getCustomerID() == c1) customer1Products.insert(r.getProductID());
-				if (r.getCustomerID() == c2) customer2Products.insert(r.getProductID());
-			}
-		}
+    private void fillCustomerProductLists(BSTNode<Review> p, int c1, int c2, 
+                                                 BST<Integer> list1, BST<Integer> list2) {
+        if (p == null) return;
 
-		//  Compare lists and print common products 
-		boolean found = false;
-		if (!customer1Products.empty() && !customer2Products.empty()) {
+        fillCustomerProductLists(p.left, c1, c2, list1, list2);
 
-			customer1Products.findfirst();
-			while (true) {
-				int pid = customer1Products.retrieve();
+        Review r = p.data;
+        // Check if this review belongs to one of the customers
+        if (r.getCustomerID() == c1 || r.getCustomerID() == c2) {
+            Product prod = AllProducts.searchProductById(r.getProductID());
+            
+            if (prod != null && prod.getAverageRating() > 4.0) {
+                if (r.getCustomerID() == c1) {
+                    list1.insert(r.getProductID(), r.getProductID());
+                } else {
+                    list2.insert(r.getProductID(), r.getProductID());
+                }
+            }
+        }
+        fillCustomerProductLists(p.right, c1, c2, list1, list2);
+    }
 
+    private void findAndPrintIntersection(BSTNode<Integer> p, BST<Integer> q) {
+        if (p == null) return;
 
-				boolean exists = false; // 'exists' is used to check if the current product ID also exists in customer2Products list
-				customer2Products.findfirst();
-				while (true) {
-					if (customer2Products.retrieve() == pid) { exists = true; break; }
-					if (customer2Products.last()) break;
-					customer2Products.findnext();
-				}
+        findAndPrintIntersection(p.left, q);
 
-				if (exists) {
-					Product p2 = AllProducts.searchProductById(pid);
-					if (p2 != null) {
-						System.out.println("Product ID: " + p2.getProductId()
-						+ ", Name: " + p2.getName()
-						+ ", Avg Rating: " + p2.getAverageRating());
-						found = true;
-					}
-				}
+        // Check if this Product ID (p.key) exists in the OTHER customer's list
+        if (q.findkey(p.key)) {
+            Product match = AllProducts.searchProductById(p.key);
+            if (match != null) {
+                System.out.println("Product ID: " + match.getProductId()
+                        + ", Name: " + match.getName()
+                        + ", Avg Rating: " + match.getAverageRating());
+            }
+        }
 
-				if (customer1Products.last()) break;
-				customer1Products.findnext();
-			}
-		}
-
-		if (!found) {
-			System.out.println("No common products reviewed by both customers with Avg > 4.");
-		}
-	}
-*/
-
-
-
+        findAndPrintIntersection(p.right, q);
+    }
 
 
 }
