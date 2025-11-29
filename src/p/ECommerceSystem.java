@@ -197,7 +197,8 @@ public class ECommerceSystem {
 					System.out.println("15- track out of stock products");
 					System.out.println("16- Display Customers Who Reviewed a Product( Sorted by Customer ID )");
 					System.out.println("17- List All Products Within a Price Range.");
-					System.out.println("18- Return to main menu.");
+					System.out.println("18- Display all customers (alphabetically)");
+					System.out.println("19- Return to main menu.");
 					System.out.print("Enter your choice: ");
 					choice=input.nextInt();
 					System.out.println("===============================================");
@@ -361,12 +362,16 @@ public class ECommerceSystem {
 					    
 					    AllProducts.printProductsByPriceRange(min, max);
 					    break;
-					case 18:// exit
+					case 18:
+					    AllCustomers.displayAllCustomersAlphabetically();
+					    break;
+
+					case 19:// exit
 						System.out.println("Thank you! ");
 						System.out.println("===============================================");
 						break;
 					}// end of manager switch
-				}while(choice!=18);
+				}while(choice!=19);
 
 
 				break; //end of case manager switch1 
@@ -498,9 +503,7 @@ public class ECommerceSystem {
 				}while(choice!=8);
 
 				break; //end of case customer switch1
-			case 9 :
-				AllCustomers.displayAllCustomersAlphabetically();
-
+			
 
 			case 3: //Exit 
 				ES.WriteData();

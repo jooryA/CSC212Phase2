@@ -88,8 +88,10 @@ public class Customers {
 				System.out.println("Error in reading file: "+e.getMessage());
 			}
 		}
+		// Root of the temporary BST used for alphabetical sorting by customer name
 		private NameNode rootByName = null;
-
+		
+		// Internal node class used for building the name based BST
 		private static class NameNode {
 		    String key;        
 		    Customer data;     
@@ -116,6 +118,7 @@ public class Customers {
 
 		    fillNameTree(node.right);
 		}
+		
 		private void insertByName(String key, Customer c) {
 		    if (rootByName == null) {
 		        rootByName = new NameNode(key, c);
@@ -123,16 +126,19 @@ public class Customers {
 		    }
 
 		    NameNode current = rootByName;
-		    while (true) {
+		    while (true) {       
+		    	// Compare alphabetically (case-insensitive)
 		        int cmp = key.compareToIgnoreCase(current.key);
-
+		        
+	            // Go left if the new key is alphabetically smaller
 		        if (cmp < 0) {
 		            if (current.left == null) {
 		                current.left = new NameNode(key, c);
 		                return;
 		            }
 		            current = current.left;
-
+		            
+		            // Go right if the new key is alphabetically larger
 		        } else if (cmp > 0) {
 		            if (current.right == null) {
 		                current.right = new NameNode(key, c);
@@ -151,7 +157,7 @@ public class Customers {
 		    inorderByName(node.left);
 
 		    System.out.println("---------------------------------------------");
-		    node.data.display();
+		    node.data.display();// print the customer info
 
 		    inorderByName(node.right);
 		}
@@ -163,7 +169,8 @@ public class Customers {
 		    }
 
 		    System.out.println("=== All customers sorted alphabetically ===");
-		    buildNameTree();
+		    buildNameTree();     // Build the alphabetical BST from the main ID based BST
+
 		    inorderByName(rootByName);
 		}
 
