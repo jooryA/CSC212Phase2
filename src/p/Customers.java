@@ -17,9 +17,9 @@ public class Customers {
 		}
 		public Customer SearchCustomerById(int id) {
 			if(Customers.empty())
-				return null;    //No products in the list
+				return null;   
 			else {
-				if(Customers.findkey(id))     //sets the current in the desired product
+				if(Customers.findkey(id))     
 					return Customers.retrieve();
 				return null;
 			}	
@@ -92,168 +92,168 @@ public class Customers {
 		private NameNode rootByName = null;
 		
 		// Internal node class used for building the name based BST
-		private static class NameNode {
-
-String key;
-
-Customer data;
-
-NameNode left;
-
-NameNode right;
-
-
-
-NameNode(String key, Customer data) {
-
-this.key = key;
-
-this.data = data;
-
-}
-
-}
-
-private void buildNameTree() {
-
-rootByName = null;
-
-fillNameTree(Customers.getRoot());
-
-}
-
-
-
-private void fillNameTree(BSTNode<Customer> node) {
-
-if (node == null) return;
-
-
-
-fillNameTree(node.left);
-
-
-
-String key = node.data.getName() + "#" + node.data.getCustomerId();
-
-insertByName(key, node.data);
-
-
-
-fillNameTree(node.right);
-
-}
-
-
-private void insertByName(String key, Customer c) {
-
-if (rootByName == null) {
-
-rootByName = new NameNode(key, c);
-
-return;
-
-}
-
-
-
-NameNode current = rootByName;
-
-while (true) {
-
-// Compare alphabetically (case-insensitive)
-
-int cmp = key.compareToIgnoreCase(current.key);
-
-
-// Go left if the new key is alphabetically smaller
-
-if (cmp < 0) {
-
-if (current.left == null) {
-
-current.left = new NameNode(key, c);
-
-return;
-
-}
-
-current = current.left;
-
-
-// Go right if the new key is alphabetically larger
-
-} else if (cmp > 0) {
-
-if (current.right == null) {
-
-current.right = new NameNode(key, c);
-
-return;
-
-}
-
-current = current.right;
-
-
-
-} else {
-
-return;
-
-}
-
-}
-
-}
-
-private void inorderByName(NameNode node) {
-
-if (node == null) return;
-
-
-
-inorderByName(node.left);
-
-
-
-System.out.println("---------------------------------------------");
-
-node.data.display();// print the customer info
-
-
-
-inorderByName(node.right);
-
-}
-
-
-
-public void displayAllCustomersAlphabetically() {
-
-if (Customers.empty()) {
-
-System.out.println("No customers found");
-
-return;
-
-}
-
-
-
-System.out.println("=== All customers sorted alphabetically ===");
-
-buildNameTree(); // Build the alphabetical BST from the main ID based BST
-
-
-
-inorderByName(rootByName);
-
-}
-
-
-
-
-}
+			private static class NameNode {
+	
+		String key;
+		
+		Customer data;
+		
+		NameNode left;
+		
+		NameNode right;
+		
+		
+		
+		NameNode(String key, Customer data) {
+		
+		this.key = key;
+		
+		this.data = data;
+		
+		}
+		
+		}
+		
+		private void buildNameTree() {
+		
+		rootByName = null;
+		
+		fillNameTree(Customers.getRoot());
+		
+		}
+		
+		
+		
+		private void fillNameTree(BSTNode<Customer> node) {
+		
+		if (node == null) return;
+		
+		
+		
+		fillNameTree(node.left);
+		
+		
+		
+		String key = node.data.getName() + "#" + node.data.getCustomerId();
+		
+		insertByName(key, node.data);
+		
+		
+		
+		fillNameTree(node.right);
+		
+		}
+		
+		
+		private void insertByName(String key, Customer c) {
+		
+		if (rootByName == null) {
+		
+		rootByName = new NameNode(key, c);
+		
+		return;
+		
+		}
+		
+		
+		
+		NameNode current = rootByName;
+		
+		while (true) {
+		
+		// Compare alphabetically (case-insensitive)
+		
+		int cmp = key.compareToIgnoreCase(current.key);
+		
+		
+		// Go left if the new key is alphabetically smaller
+		
+		if (cmp < 0) {
+		
+		if (current.left == null) {
+		
+		current.left = new NameNode(key, c);
+		
+		return;
+		
+		}
+		
+		current = current.left;
+		
+		
+		// Go right if the new key is alphabetically larger
+		
+		} else if (cmp > 0) {
+		
+		if (current.right == null) {
+		
+		current.right = new NameNode(key, c);
+		
+		return;
+		
+		}
+		
+		current = current.right;
+		
+		
+		
+		} else {
+		
+		return;
+		
+		}
+		
+		}
+		
+		}
+		
+		private void inorderByName(NameNode node) {
+		
+		if (node == null) return;
+		
+		
+		
+		inorderByName(node.left);
+		
+		
+		
+		System.out.println("---------------------------------------------");
+		
+		node.data.display();// print the customer info
+		
+		
+		
+		inorderByName(node.right);
+		
+		}
+		
+		
+		
+		public void displayAllCustomersAlphabetically() {
+		
+		if (Customers.empty()) {
+		
+		System.out.println("No customers found");
+		
+		return;
+		
+		}
+		
+		
+		
+		System.out.println("=== All customers sorted alphabetically ===");
+		
+		buildNameTree(); // Build the alphabetical BST from the main ID based BST
+		
+		
+		
+		inorderByName(rootByName);
+		
+		}
+		
+		
+		
+		
+		}
 
 
