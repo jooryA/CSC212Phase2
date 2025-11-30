@@ -661,7 +661,7 @@ public class ECommerceSystem {
 	    System.out.println("--- Customers who reviewed product " + productId + " (sorted by customer ID) ---");
 
 	 // Print the sorted reviews using in-order traversal
-	    printSorted(temp.getRoot());
+	    printSorted(temp.getRoot(),AllCustomers);
 	}
 
 	private static void collectReviewsForProduct(BSTNode<Review> node, int productId, BST<Review> temp) {
@@ -680,12 +680,23 @@ public class ECommerceSystem {
 	    // Right
 	    collectReviewsForProduct(node.right, productId, temp);
 	}
-	private static void printSorted(BSTNode<Review> node) {
+	private static void printSorted(BSTNode<Review> node, Customers customers) {
 	    if (node == null) return;
 
-	    printSorted(node.left);
-	    node.data.display();  
-	    printSorted(node.right);
+	    printSorted(node.left, customers);
+
+	    Review r = node.data;
+	    int cid = r.getCustomerID();
+	    Customer c = customers.SearchCustomerById(cid);
+
+	    if (c != null) {
+	        System.out.println("Customer Name: " + c.getName());
+	    }
+
+	    r.display(); 
+	    System.out.println("---------------------------------------------");
+
+	    printSorted(node.right, customers);
 	}
 
 
