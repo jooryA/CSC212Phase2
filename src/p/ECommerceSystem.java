@@ -648,7 +648,7 @@ public class ECommerceSystem {
 	    }
 
 	 // Temporary BST to sort matching reviews by customer ID
-	    BST<Review> temp = new BST<>();
+	   AVL<Review> temp = new AVL<>();
 
 	    // Collect all reviews for this product into the temporary tree
 	    collectReviewsForProduct(ReviewsTree.getRoot(), productId, temp);
@@ -664,7 +664,7 @@ public class ECommerceSystem {
 	    printSorted(temp.getRoot(),AllCustomers);
 	}
 
-	private static void collectReviewsForProduct(BSTNode<Review> node, int productId, BST<Review> temp) {
+	private static void collectReviewsForProduct(BSTNode<Review> node, int productId,AVL<Review> temp) {
 	    if (node == null) return;
 
 	    // Left
@@ -707,8 +707,8 @@ public class ECommerceSystem {
             return;
         }
         
-        BST<Integer> c1Prods = new BST<>();
-        BST<Integer> c2Prods = new BST<>();
+        AVL<Integer> c1Prods = new AVL<>();
+        AVL<Integer> c2Prods = new AVL<>();
 
         fillCustomerProductLists(ReviewsTree.getRoot(), c1, c2, c1Prods, c2Prods);
 
@@ -722,7 +722,7 @@ public class ECommerceSystem {
     }
 
     private void fillCustomerProductLists(BSTNode<Review> p, int c1, int c2, 
-                                                 BST<Integer> list1, BST<Integer> list2) {
+                                                 AVL<Integer> list1, AVL<Integer> list2) {
         if (p == null) return;
 
         fillCustomerProductLists(p.left, c1, c2, list1, list2);
@@ -743,7 +743,7 @@ public class ECommerceSystem {
         fillCustomerProductLists(p.right, c1, c2, list1, list2);
     }
 
-    private void findAndPrintIntersection(BSTNode<Integer> p, BST<Integer> q) {
+    private void findAndPrintIntersection(BSTNode<Integer> p, AVL<Integer> q) {
         if (p == null) return;
 
         findAndPrintIntersection(p.left, q);
