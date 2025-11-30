@@ -28,7 +28,7 @@ public class Orders {
 	
 		// Search for an order by its ID 
 		public Order SearchOrderByID(int id) {
-			// If the orders BST is empty, nothing to search
+			// If the orders Avl is empty, nothing to search
 		    if (orders.empty()) {
 		        return null;
 		    }
@@ -40,7 +40,7 @@ public class Orders {
 		}
 
 	
-		// Create a new order and insert it into the Orders BST.
+		// Create a new order and insert it into the Orders Avl.
 		public void CreateOrder(Order ord) {
 		    if (ord == null) {
 		        System.out.println("Invalid order (null).");
@@ -93,7 +93,7 @@ public class Orders {
 		    double total = OrderTotalPrice(ord);
 		    ord.setTotalPrice(total);
 
-		    // Insert the order into the Orders BST and attach it to the customer
+		    // Insert the order into the Orders Avl and attach it to the customer
 		    orders.insert(ord.getOrderId(), ord); 
 		    AttachOrderToCustomer(ord); // Link it to the customer
 
@@ -122,7 +122,7 @@ public class Orders {
 	// Cancel an order only if its status is PENDING.
 	public void CancelOrder(int id) {
 
-	    // Search for the order using BST 
+	    // Search for the order 
 	    Order o = SearchOrderByID(id);
 	    if (o == null) {
 	        System.out.println("No order found with ID: " + id);
@@ -243,7 +243,7 @@ public class Orders {
 	            String status = data[5].trim();
 
 	            Order o = new Order(orderId, customerId, productId, totalPrice, orderDate, status);
-	            orders.insert(orderId,o); // Insert order into the BST
+	            orders.insert(orderId,o); // Insert order into the Avl
 	         // Attach this order to the customer so history will include it
 	            AttachOrderToCustomer(o);
 	        }}
