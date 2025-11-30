@@ -193,12 +193,13 @@ public class ECommerceSystem {
 					System.out.println("11- Display all orders");
 					System.out.println("12- Display all reviews");
 					System.out.println("13- Get average product rating");
-					System.out.println("14- Search for a product by its name");
+					System.out.println("14- Search for a product by its ID");
 					System.out.println("15- track out of stock products");
 					System.out.println("16- Display Customers Who Reviewed a Product( Sorted by Customer ID )");
 					System.out.println("17- List All Products Within a Price Range.");
 					System.out.println("18- Display all customers (alphabetically)");
-					System.out.println("19- Return to main menu.");
+					System.out.println("19- search customer by ID");
+					System.out.println("20- Return to main menu.");
 					System.out.print("Enter your choice: ");
 					choice=input.nextInt();
 					System.out.println("===============================================");
@@ -336,15 +337,15 @@ public class ECommerceSystem {
 						else
 							System.out.println("No product with this Id found");	
 						break;
-					case 14://search for a product by its name 
-						System.out.println("Enter The name of product you want to Search for: ");
+					case 14://search for a product by its ID
+						System.out.println("Enter The ID of product you want to Search for: ");
 						input.nextLine();
-						String proName=input.nextLine();
-						Product n=AllProducts.getSearchProductByName(proName);
+						int proID=input.nextInt();
+						Product n=AllProducts.searchProductById(proID);
 						if(n!= null)
 							System.out.println(n);
 						else
-							System.out.println("No product with this name found");
+							System.out.println("No product with this ID found");
 						break;
 					case 15:// show is there out of stock products
 						AllProducts.getOutOfStockProducts();
@@ -365,13 +366,23 @@ public class ECommerceSystem {
 					case 18:
 					    AllCustomers.displayAllCustomersAlphabetically();
 					    break;
+					case 19://search customer by ID
+						System.out.println("Enter The ID of customer you want to Search for: ");
+						input.nextLine();
+						int cusID=input.nextInt();
+						Customer cus=AllCustomers.SearchCustomerById(cusID);
+						if(cus!= null)
+							cus.display();
+						else
+							System.out.println("No customer with this ID found");
+						break;
 
-					case 19:// exit
+					case 20:// exit
 						System.out.println("Thank you! ");
 						System.out.println("===============================================");
 						break;
 					}// end of manager switch
-				}while(choice!=19);
+				}while(choice!=20);
 
 
 				break; //end of case manager switch1 
