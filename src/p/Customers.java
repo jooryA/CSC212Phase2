@@ -5,7 +5,7 @@ public class Customers {
 	
 
 
-
+	// AVL tree that stores all customers in the system
 		private  AVL<Customer> Customers;
 
 		public Customers() {
@@ -15,12 +15,13 @@ public class Customers {
 		public Customers(AVL<Customer> customerTree) {
 		Customers=customerTree;	
 		}
+		// Search for a customer using their ID
 		public Customer SearchCustomerById(int id) {
 			if(Customers.empty())
 				return null;   
 			else {
-				if(Customers.findkey(id))     
-					return Customers.retrieve();
+				if(Customers.findkey(id))  // If the key exists in the AVL tree   
+					return Customers.retrieve();// Return the Customer object
 				return null;
 			}	
 		}
@@ -94,7 +95,7 @@ public class Customers {
 		// Internal node class used for building the name based BST
 			private static class NameNode {
 	
-		String key;
+		String key;// name#id
 		
 		Customer data;
 		

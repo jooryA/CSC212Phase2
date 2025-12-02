@@ -266,8 +266,7 @@ public class ECommerceSystem {
 
 						if (newStatus.equals("cancelled") || newStatus.equals("canceled")) {
 							AllOrders.CancelOrder(id);
-							System.out.println("Order moved to CANCELLED.");
-							}
+							}else
 						
 						o.UpdateOrderStatus(newStatus);
 						break;
