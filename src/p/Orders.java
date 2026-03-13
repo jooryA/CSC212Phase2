@@ -95,7 +95,7 @@ public class Orders {
 
 		    // Insert the order into the Orders Avl and attach it to the customer
 		    orders.insert(ord.getOrderId(), ord); 
-		    AttachOrderToCustomer(ord); // Link it to the customer
+		    AttachOrderToCustomer(ord); // Link it to the customer 
 
 		    // decrease stock for each product in this order
 		    ids.findfirst();
